@@ -40,6 +40,14 @@
   align-items: center;
 }
 
-.register--btn {
+.action--btn {
   padding: 1.6rem 3.2rem;
+}
+
+.btn-menu {
+  background-color: var(--secondary-500);
+  border-radius: 50%;
+  /* height: 64px;
+  width: 64px; */
+  padding: 8px;
 }

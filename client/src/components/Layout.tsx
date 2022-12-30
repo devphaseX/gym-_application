@@ -4,12 +4,11 @@ import { supportNativeMatchMedia, useMediaQuery } from '../hooks/useMediaQuery';
 
 const useMediaQueryMedium = () =>
   useMediaQuery(
-    supportNativeMatchMedia ? '(min-width: 600px)' : { 'min-width': '600px' }
+    supportNativeMatchMedia ? '(min-width: 1060px)' : { 'min-width': '1060px' }
   );
 
 const Layout = () => {
   const [selectedPage, setCurrentSelect] = useState<NavValueType>(navType.Home);
-  const match = useMediaQueryMedium();
 
   return (
     <div>

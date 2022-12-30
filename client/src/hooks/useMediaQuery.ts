@@ -1,25 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 
-const supportNativeMatchMedia =
-  'matchMedia' in window && typeof window.matchMedia === 'function';
-
 type QueryValueObject = { value: number; unit: QueryUnit };
-
 type QueryMediaValue = string | QueryValueObject;
-
-type QueryUnit = 'px';
-const units: Readonly<{ [K in QueryUnit]: boolean }> = { px: true };
-
-const getWorkableUnits = (unitObject: typeof units) => {
-  const _units = Object.keys(unitObject).filter(
-    (unit) => units[unit as keyof typeof units]
-  );
-  return {
-    pattern: new RegExp(`(${_units.join('|')})$`),
-    acceptableUnits: _units,
-  };
-};
-
 type MediaQueryObject = {
   'min-width'?: QueryMediaValue;
   'min-height'?: QueryMediaValue;
@@ -36,6 +18,25 @@ type SupportMediaQueryObject = {
   [K in keyof MediaQueryObject]-?: {
     type: K;
     evaluator: MediaQueryEvaluatorFn;
+  };
+};
+
+type MapQueryToObjectValue<Q> = Q extends MediaQueryObject
+  ? { [K in keyof Q]: QueryValueObject }
+  : null;
+
+type QueryUnit = 'px';
+
+const units: Readonly<{ [K in QueryUnit]: boolean }> = { px: true };
+const supportNativeMatchMedia =
+  'matchMedia' in window && typeof window.matchMedia === 'function';
+const getWorkableUnits = (unitObject: typeof units) => {
+  const _units = Object.keys(unitObject).filter(
+    (unit) => units[unit as keyof typeof units]
+  );
+  return {
+    pattern: new RegExp(`(${_units.join('|')})$`),
+    acceptableUnits: _units,
   };
 };
 
@@ -134,10 +135,6 @@ function resolveQueryObject(queryObj: MediaQueryObject) {
   return interpretableQuery;
 }
 
-type MapQueryToObjectValue<Q> = Q extends MediaQueryObject
-  ? { [K in keyof Q]: QueryValueObject }
-  : null;
-
 const useParsedMediaQueryObject = (query: string | MediaQueryObject) =>
   useMemo(() => {
     if (!supportNativeMatchMedia || typeof query === 'string') return null;
@@ -189,16 +186,21 @@ const useMediaQuery = (
   const parsedQueryObject = useParsedMediaQueryObject(query);
   useEffect(() => {
     let unsubscribe!: () => void;
+
     const resolvedQueryValue =
       typeof query !== 'string' ? resolveQueryObject(query) : query;
-    function onQueryMatch() {}
+
     if (!attachElementProvided && supportNativeMatchMedia) {
       const mediaQuery = window.matchMedia(resolvedQueryValue);
 
       if (mediaQuery.matches !== matches) setMatches(mediaQuery.matches);
-      mediaQuery.onchange = () => onQueryMatch();
+      const onQueryMatch = (event: MediaQueryListEvent) =>
+        setMatches(event.matches);
 
-      unsubscribe = () => (mediaQuery.onchange = null);
+      mediaQuery.addEventListener('change', onQueryMatch);
+
+      unsubscribe = () =>
+        mediaQuery.removeEventListener('change', onQueryMatch);
     } else {
       if (!parsedQueryObject) {
         throw new Error(
@@ -207,26 +209,22 @@ const useMediaQuery = (
         );
       }
 
-      let lastMatch = Object.keys(parsedQueryObject).length !== 0;
-      function computeQueryMatch(
+      function setQueryMatch(
         dimension: ScreenDimension,
         parsedQuery: MapQueryToObjectValue<MediaQueryObject>
       ) {
         type SupportMediaKeys = Array<keyof SupportMediaQueryObject>;
         const queryKeys = Object.keys(parsedQuery) as SupportMediaKeys;
 
-        let match = queryKeys.length !== 0;
+        let newMatchDetected = queryKeys.length !== 0;
         queryKeys.forEach((key) => {
           const queryParserObject = supportedMediaQueryObjectKeys[key];
-          match =
-            match &&
+          newMatchDetected =
+            newMatchDetected &&
             queryParserObject.evaluator(parsedQuery[key]!.value)(dimension);
         });
 
-        if (lastMatch !== match) {
-          setMatches(match);
-          lastMatch = match;
-        }
+        setMatches(newMatchDetected);
       }
 
       const observingElement = attachElementProvided
@@ -236,7 +234,7 @@ const useMediaQuery = (
       if ('ResizeObserver' in window) {
         const resizeObserver = new ResizeObserver(([entry]) => {
           if (entry.target === observingElement) {
-            computeQueryMatch(entry.contentRect, parsedQueryObject);
+            setQueryMatch(entry.contentRect, parsedQueryObject);
           }
         });
         resizeObserver.observe(observingElement);
@@ -248,7 +246,7 @@ const useMediaQuery = (
             target as HTMLElement
           ).getBoundingClientRect();
 
-          computeQueryMatch({ width, height }, parsedQueryObject!);
+          setQueryMatch({ width, height }, parsedQueryObject!);
         }
         observingElement.addEventListener('resize', onPageResize);
         unsubscribe = () =>

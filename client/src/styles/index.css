@@ -22,7 +22,8 @@ ul {
   list-style: none;
 }
 
-button {
+button,
+a {
   outline: none;
   border: none;
   display: inline-flex;
@@ -30,6 +31,7 @@ button {
   align-items: center;
   background: none;
   font: inherit;
+  text-decoration: none;
 }
 
 .btn-primary {
