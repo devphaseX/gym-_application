@@ -1,8 +1,5 @@
-import '@/assets/';
+import '@/styles/index.css';
+import { Layout } from '@/components/Layout';
 
-const App = () => (
-  <div>
-    <h1>Hello world</h1>
-  </div>
-);
+const App = () => <Layout></Layout>;
 export { App };

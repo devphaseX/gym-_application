@@ -1,2 +1,40 @@
 @import url(./font.css);
 @import url(./variable.css);
+@import url(./utility.css);
+
+*::before,
+*,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  font-family: 'DM sans', sans-serif;
+  text-rendering: optimizeLegibility;
+  font-size: 62.5%;
+  color: var(--gray-500);
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  outline: none;
+  border: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  font: inherit;
+}
+
+.btn-primary {
+  background-color: var(--secondary-500);
+  color: inherit;
+  font: inherit;
+  border-radius: 10px;
+}

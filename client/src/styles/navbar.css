@@ -1,0 +1,45 @@
+.navigation {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 30;
+  padding-top: 0.6rem;
+  justify-content: center;
+}
+
+.navContainer {
+  width: 90vw;
+  gap: 64px;
+}
+
+.navContent {
+  gap: 32px;
+  flex-basis: 100%;
+  justify-content: space-between;
+  font-size: 1.6rem;
+}
+
+.navRoutes {
+  gap: 16px;
+}
+
+.navRoutes > li {
+  transition: color 0.2s ease-in;
+}
+
+.navRoutes > li:hover {
+  color: var(--primary-500);
+}
+
+.call-to_action {
+  gap: 32px;
+}
+
+.flex-positioned {
+  display: flex;
+  align-items: center;
+}
+
+.register--btn {
+  padding: 1.6rem 3.2rem;
+}
