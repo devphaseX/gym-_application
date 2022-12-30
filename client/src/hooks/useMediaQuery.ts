@@ -145,7 +145,7 @@ const useParsedMediaQueryObject = (query: string | MediaQueryObject) =>
           key as keyof SupportMediaQueryObject
         ];
       })
-      .map((key) => {
+      .forEach((key) => {
         const accessKey = key as keyof MediaQueryObject;
         if (!_query[accessKey]) return;
         _query[accessKey] = parseAsQueryObject(_query[accessKey]!);
