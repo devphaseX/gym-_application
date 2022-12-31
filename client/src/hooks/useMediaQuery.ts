@@ -28,8 +28,11 @@ type MapQueryToObjectValue<Q> = Q extends MediaQueryObject
 type QueryUnit = 'px';
 
 const units: Readonly<{ [K in QueryUnit]: boolean }> = { px: true };
-const supportNativeMatchMedia =
+const nativeMatchMediaExit =
   'matchMedia' in window && typeof window.matchMedia === 'function';
+
+const checkNativeMatchMedia = () => nativeMatchMediaExit;
+
 const getWorkableUnits = (unitObject: typeof units) => {
   const _units = Object.keys(unitObject).filter(
     (unit) => units[unit as keyof typeof units]
@@ -137,7 +140,7 @@ function resolveQueryObject(queryObj: MediaQueryObject) {
 
 const useParsedMediaQueryObject = (query: string | MediaQueryObject) =>
   useMemo(() => {
-    if (!supportNativeMatchMedia || typeof query === 'string') return null;
+    if (!nativeMatchMediaExit || typeof query === 'string') return null;
     const _query = { ...query };
     Object.keys(query)
       .filter(function removeNonSupportedQuery(key) {
@@ -156,6 +159,7 @@ const useParsedMediaQueryObject = (query: string | MediaQueryObject) =>
 
 interface UseMediaQueryOption {
   attachElement?: HTMLElement;
+  onChange?: (prevMatches: boolean, currentMatches: boolean) => void;
 }
 
 const useMediaQuery = (
@@ -166,7 +170,7 @@ const useMediaQuery = (
 
   let attachElementProvided = false;
   if (
-    (!supportNativeMatchMedia ||
+    (!nativeMatchMediaExit ||
       (attachElementProvided = !!(option && option.attachElement))) &&
     typeof query === 'string'
   ) {
@@ -190,12 +194,16 @@ const useMediaQuery = (
     const resolvedQueryValue =
       typeof query !== 'string' ? resolveQueryObject(query) : query;
 
-    if (!attachElementProvided && supportNativeMatchMedia) {
+    if (!attachElementProvided && nativeMatchMediaExit) {
       const mediaQuery = window.matchMedia(resolvedQueryValue);
 
       if (mediaQuery.matches !== matches) setMatches(mediaQuery.matches);
-      const onQueryMatch = (event: MediaQueryListEvent) =>
-        setMatches(event.matches);
+      const onQueryMatch = (event: MediaQueryListEvent) => {
+        setMatches((prevMatch) => {
+          option?.onChange?.(prevMatch, event.matches);
+          return event.matches;
+        });
+      };
 
       mediaQuery.addEventListener('change', onQueryMatch);
 
@@ -224,6 +232,7 @@ const useMediaQuery = (
             queryParserObject.evaluator(parsedQuery[key]!.value)(dimension);
         });
 
+        option?.onChange?.(matches, newMatchDetected);
         setMatches(newMatchDetected);
       }
 
@@ -259,4 +268,4 @@ const useMediaQuery = (
   return matches;
 };
 
-export { useMediaQuery, supportNativeMatchMedia };
+export { useMediaQuery, checkNativeMatchMedia };

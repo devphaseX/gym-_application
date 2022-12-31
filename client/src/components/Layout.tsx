@@ -1,15 +1,22 @@
 import { useState } from 'react';
 import { NavBar, NavValueType, navType } from '@/components/navbar';
-import { supportNativeMatchMedia, useMediaQuery } from '../hooks/useMediaQuery';
+import { checkNativeMatchMedia, useMediaQuery } from '../hooks/useMediaQuery';
+import { useEffect } from 'react';
 
-const useMediaQueryMedium = () =>
+interface UseMediaQueryMedium {
+  onChange?(prevMatch: boolean, newMatch: boolean): void;
+}
+
+const useMediaQueryMedium = (option?: UseMediaQueryMedium) =>
   useMediaQuery(
-    supportNativeMatchMedia ? '(min-width: 1060px)' : { 'min-width': '1060px' }
+    checkNativeMatchMedia() ? '(min-width: 1060px)' : { 'min-width': '1060px' },
+    { onChange: option?.onChange }
   );
 
 const Layout = () => {
   const [selectedPage, setCurrentSelect] = useState<NavValueType>(navType.Home);
 
+  useEffect(() => {}, []);
   return (
     <div>
       <NavBar
