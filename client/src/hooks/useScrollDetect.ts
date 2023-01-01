@@ -17,23 +17,27 @@ const useStickyNavigationDetect = ({
 
   const navHeight = useMemo(() => {
     if (ref.current === null || ref.current === undefined) return;
-    return ref.current.getBoundingClientRect().width;
+    return ref.current.getBoundingClientRect().height;
   }, [ref.current]);
 
   useEffect(() => {
+    const abort = new AbortController();
+
     async function onScroll() {
       if (navHeight === undefined) return;
       const scrollY = window.scrollY;
 
-      const isPageTop = await captureUpdateFunctionState(setPageTop);
-      if (isPageTop && navHeight * scrollY > navHeight) {
-        setPageTop(false);
-      } else if (scrollY * navHeight === 0) {
-        setPageTop(true);
+      const scollYRatio = scrollY / document.body.scrollHeight;
+      const pageYOffset = scollYRatio * document.body.clientHeight;
+      const match = pageYOffset > navHeight;
+      if (match !== (await captureUpdateFunctionState(setPageTop))) {
+        setPageTop(pageYOffset > navHeight);
       }
     }
-    document.addEventListener('scroll', onScroll);
-    return () => document.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { signal: abort.signal });
+    window.scrollBy({ top: 1 });
+    window.scroll({ top: -1 });
+    return () => abort.abort();
   }, [ref.current]);
 
   return isPageTop;

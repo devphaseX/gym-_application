@@ -43,4 +43,15 @@ a {
   color: inherit;
   font: inherit;
   border-radius: 10px;
+  transition: background-color 0.2s ease-in, color 0.4s ease-out;
+  padding: 1.6rem 4rem;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-500);
+  color: white;
+}
+
+.disable-scroll-bar {
+  overflow-y: hidden;
 }

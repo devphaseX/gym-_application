@@ -1,22 +1,39 @@
-//@ts-ignore
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { NavValueType } from '.';
+import { createHashTag } from '@/util';
 
 interface LinkProps {
   page: NavValueType;
   currentSelected: NavValueType;
+  activeHoverLink: NavValueType | null;
+  disableActiveOnHover: boolean;
   setCurrentSelect: (select: NavValueType) => void;
+  setLinkAsHover: (select: NavValueType | null) => void;
 }
 
-const Link = ({ page, currentSelected, setCurrentSelect }: LinkProps) => {
-  const parseHash = page.replace(/^#|\s+/g, '').toLowerCase() as NavValueType;
+const Link = ({
+  page,
+  disableActiveOnHover,
+  currentSelected,
+  setCurrentSelect,
+  setLinkAsHover,
+  activeHoverLink,
+}: LinkProps) => {
+  const parseHash = createHashTag(page);
   return (
     <AnchorLink
       href={parseHash}
       className={
-        currentSelected.toLowerCase() === parseHash ? 'active-nav' : ''
+        (!disableActiveOnHover &&
+          activeHoverLink === null &&
+          currentSelected === page) ||
+        activeHoverLink === page
+          ? 'active-nav'
+          : ''
       }
-      onClick={setCurrentSelect}
+      onClick={() => setCurrentSelect(page)}
+      onMouseEnter={() => setLinkAsHover(page)}
+      onMouseLeave={() => setLinkAsHover(null)}
     >
       {page}
     </AnchorLink>

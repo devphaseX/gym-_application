@@ -3,13 +3,13 @@
   top: 0;
   width: 100vw;
   z-index: 30;
-  padding-top: 0.6rem;
+  padding-block: 2.4rem;
   justify-content: center;
 }
 
 .navContainer {
   width: 90vw;
-  gap: 64px;
+  gap: 72px;
 }
 
 .navContent {
@@ -20,7 +20,9 @@
 }
 
 .navRoutes {
-  gap: 32px;
+  gap: 48px;
+  font-size: 1.8rem;
+  text-transform: capitalize;
 }
 
 .navRoutes > li {
@@ -35,13 +37,13 @@
   gap: 32px;
 }
 
+.active-nav {
+  color: var(--primary-500) !important;
+}
+
 .flex-positioned {
   display: flex;
   align-items: center;
-}
-
-.action--btn {
-  padding: 1.6rem 3.2rem;
 }
 
 .btn-menu {
@@ -64,6 +66,7 @@
   position: absolute;
   top: 20px;
   right: 40px;
+  width: calc(100% - 42px);
 }
 
 .mobile-aside-menu {
@@ -71,25 +74,38 @@
   top: 0;
   bottom: 0;
   right: 0;
-  width: 70vw;
-  background-color: var(--primary-500);
+  width: min(65vw, 300px);
+  background-color: var(--primary-100);
+  box-shadow: 5px 6px 20px 0px #575757;
+}
+
+@media screen and (min-width: 600px) {
+  .mobile-aside-menu {
+    width: 65vw;
+  }
+}
+
+.mobile-nav-list-box {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
 }
 
 .mobile-nav-links {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   row-gap: 32px;
   font-size: 32px;
-  color: white;
+  color: var(--gray-500);
 }
 
-.mobile-nav-links a {
+:is(.larger-screen, .mobile-nav-links) a {
   font: inherit;
   color: currentColor;
+}
+
+.mobile-nav-links li:hover {
+  color: var(--primary-500);
 }
 
 .close-menu-box {
@@ -99,5 +115,5 @@
 }
 
 .stickNav {
-  background-color: var(--primary-500);
+  background-color: var(--primary-100);
 }

@@ -1,5 +1,4 @@
-import { useMemo, useRef } from 'react';
-//@ts-ignore
+import { useMemo, useRef, useEffect } from 'react';
 import '@/styles/navbar.css';
 import { imageAssest } from '@/assets';
 import { Link, LinkProps } from './Link';
@@ -22,23 +21,31 @@ const navType = {
 type NavObjectType = typeof navType;
 type NavValueType = NavObjectType[keyof NavObjectType];
 
-interface NavBarProps extends Omit<LinkProps, 'page'> {}
+interface NavBarProps
+  extends Omit<
+    LinkProps,
+    'page' | 'activeHoverLink' | 'setLinkAsHover' | 'disableActiveOnHover'
+  > {}
 
 const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
   const [menuToggled, setMenuToggle] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  //Encapulate the scrolling logic to determine whether to stick a navigation to the viewports on scroll
   const stickNav = useStickyNavigationDetect({
     ref: navRef,
-    assumeTop: window.screenY === 0,
   });
+
+  const [currentHoverNav, setHoverNav] = useState<NavValueType | null>(null);
+  const [disableLinkFlash, setDisableLinkFlash] = useState(false);
 
   const actionUpdate = useActionUpdate();
 
-  const desktopSizedScreenDetected = useMediaQueryMedium({
-    onChange: resetMenuToggleOnScreenChange,
+  const matchMediumAboveScreen = useMediaQueryMedium({
+    onChange: resetToggleOnDesktopTran,
   });
 
-  async function resetMenuToggleOnScreenChange(
+  //This function reset the menu sidebar for mobile screen on transition to Desktop mode
+  async function resetToggleOnDesktopTran(
     prevMatch: boolean,
     currentMatch: boolean
   ) {
@@ -49,47 +56,71 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
     }
   }
 
+  useEffect(() => {
+    const menuTriggedOnMobile = !matchMediumAboveScreen && menuToggled;
+    //disable scrolling on sidebar menu and mobile mode detection
+    document.body.classList.toggle('disable-scroll-bar', menuTriggedOnMobile);
+  }, [menuToggled]);
   const reactLinkNodes = useMemo(() => {
     return (
       <>
-        <Link
-          page={navType.Home}
-          currentSelected={currentSelected}
-          setCurrentSelect={setCurrentSelect}
-        />
+        <li>
+          <Link
+            page={navType.Home}
+            disableActiveOnHover={disableLinkFlash}
+            currentSelected={currentSelected}
+            setCurrentSelect={setCurrentSelect}
+            setLinkAsHover={setHoverNav}
+            activeHoverLink={currentHoverNav}
+          />
+        </li>
+        <li>
+          <Link
+            page={navType.Benefit}
+            disableActiveOnHover={disableLinkFlash}
+            currentSelected={currentSelected}
+            setCurrentSelect={setCurrentSelect}
+            setLinkAsHover={setHoverNav}
+            activeHoverLink={currentHoverNav}
+          />
+        </li>
 
-        <Link
-          page={navType.Benefit}
-          currentSelected={currentSelected}
-          setCurrentSelect={setCurrentSelect}
-        />
-
-        <Link
-          page={navType.OurClasess}
-          currentSelected={currentSelected}
-          setCurrentSelect={setCurrentSelect}
-        />
-
-        <Link
-          page={navType.ContactUs}
-          currentSelected={currentSelected}
-          setCurrentSelect={setCurrentSelect}
-        />
+        <li>
+          <Link
+            page={navType.OurClasess}
+            disableActiveOnHover={disableLinkFlash}
+            currentSelected={currentSelected}
+            setCurrentSelect={setCurrentSelect}
+            setLinkAsHover={setHoverNav}
+            activeHoverLink={currentHoverNav}
+          />
+        </li>
+        <li>
+          <Link
+            page={navType.ContactUs}
+            disableActiveOnHover={disableLinkFlash}
+            currentSelected={currentSelected}
+            setCurrentSelect={setCurrentSelect}
+            setLinkAsHover={setHoverNav}
+            activeHoverLink={currentHoverNav}
+          />
+        </li>
       </>
     );
-  }, [currentSelected]);
-
+  }, [currentSelected, currentHoverNav, disableLinkFlash]);
   return (
     <nav
       className={`flex-positioned navigation ${
-        stickNav !== true ? 'stickNav' : ''
+        stickNav ? 'stickNav' : ''
       }`.trim()}
     >
       <div
         className="flex-positioned navContainer"
         ref={(element) => {
           if (!element) return;
-          if (navRef.current) return;
+          if (navRef.current !== null && navRef.current === element) {
+            return;
+          }
           (navRef as { current: HTMLElement }).current = element;
           actionUpdate();
         }}
@@ -97,9 +128,15 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
         <div>
           <img src={brandLogoUrl} alt={brandLogoAltText} />
         </div>
-        {desktopSizedScreenDetected ? (
-          <div className="flex-positioned navContent">
-            <ul className="flex-positioned navRoutes">{reactLinkNodes}</ul>
+        {matchMediumAboveScreen ? (
+          <div
+            className="flex-positioned navContent"
+            onMouseEnter={() => setDisableLinkFlash(true)}
+            onMouseLeave={() => setDisableLinkFlash(false)}
+          >
+            <ul className="flex-positioned navRoutes larger-screen">
+              {reactLinkNodes}
+            </ul>
             <div className="flex-positioned call-to_action">
               <button>Sign in</button>
               <ActionButton setCurrentSelect={setCurrentSelect}>
@@ -116,7 +153,7 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
           </div>
         )}
       </div>
-      {!desktopSizedScreenDetected && menuToggled ? (
+      {!matchMediumAboveScreen && menuToggled ? (
         <div className="mobile-aside-menu">
           <div className="mobile-aside-position">
             <div className="close-menu-box">
@@ -128,7 +165,7 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
                 X
               </button>
             </div>
-            <div>
+            <div className="mobile-nav-list-box">
               <ul className="mobile-nav-links">{reactLinkNodes}</ul>
             </div>
           </div>

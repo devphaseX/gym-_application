@@ -1,7 +1,7 @@
-//@ts-ignore
-import AnchorLink from 'react-anchor-link-smooth-scroll';
 import React from 'react';
+import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { NavValueType, navType } from '../navbar';
+import { createHashTag } from '@/util';
 
 interface ActionButtonProps {
   setCurrentSelect: (value: NavValueType) => void;
@@ -17,7 +17,7 @@ const ActionButton = ({
   <AnchorLink
     className="btn-primary action--btn"
     onClick={() => setCurrentSelect(navType.ContactUs)}
-    href={`#${navType.ContactUs.toLowerCase()}`}
+    href={createHashTag(navType.ContactUs)}
     {...extra}
   >
     {children}
