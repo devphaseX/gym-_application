@@ -40,7 +40,7 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
 
   const actionUpdate = useActionUpdate();
 
-  const matchMediumAboveScreen = useMediaQueryMedium({
+  const screenAboveMedium = useMediaQueryMedium({
     onChange: resetToggleOnDesktopTran,
   });
 
@@ -57,7 +57,7 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
   }
 
   useEffect(() => {
-    const menuTriggedOnMobile = !matchMediumAboveScreen && menuToggled;
+    const menuTriggedOnMobile = !screenAboveMedium && menuToggled;
     //disable scrolling on sidebar menu and mobile mode detection
     document.body.classList.toggle('disable-scroll-bar', menuTriggedOnMobile);
   }, [menuToggled]);
@@ -128,7 +128,7 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
         <div>
           <img src={brandLogoUrl} alt={brandLogoAltText} />
         </div>
-        {matchMediumAboveScreen ? (
+        {screenAboveMedium ? (
           <div
             className="flex-positioned navContent"
             onMouseEnter={() => setDisableLinkFlash(true)}
@@ -153,7 +153,7 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
           </div>
         )}
       </div>
-      {!matchMediumAboveScreen && menuToggled ? (
+      {!screenAboveMedium && menuToggled ? (
         <div className="mobile-aside-menu">
           <div className="mobile-aside-position">
             <div className="close-menu-box">

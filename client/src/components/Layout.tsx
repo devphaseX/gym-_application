@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavBar, NavValueType, navType } from '@/components/navbar';
-import { checkNativeMatchMedia, useMediaQuery } from '../hooks/useMediaQuery';
+import { useQueryMedia } from '../hooks/useMediaQuery';
+import { checkNativeMatchMedia } from '../hooks/core/util';
 import { useEffect } from 'react';
 
 interface UseMediaQueryMedium {
@@ -8,12 +9,18 @@ interface UseMediaQueryMedium {
 }
 
 const useMediaQueryMedium = (option?: UseMediaQueryMedium) =>
-  useMediaQuery(
+  useQueryMedia(
     checkNativeMatchMedia() ? '(min-width: 1060px)' : { 'min-width': '1060px' },
     { onChange: option?.onChange }
   );
 
-const Layout = () => {
+interface LayoutProps {
+  children?: (props: {
+    selectedPage: NavValueType;
+    setSelectPage: (value: NavValueType) => void;
+  }) => React.ReactNode;
+}
+const Layout = ({ children }: LayoutProps) => {
   const [selectedPage, setCurrentSelect] = useState<NavValueType>(navType.Home);
 
   useEffect(() => {}, []);
@@ -23,6 +30,7 @@ const Layout = () => {
         currentSelected={selectedPage}
         setCurrentSelect={setCurrentSelect}
       />
+      {children?.({ selectedPage, setSelectPage: setCurrentSelect })}
     </div>
   );
 };

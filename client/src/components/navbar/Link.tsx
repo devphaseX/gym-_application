@@ -2,12 +2,14 @@ import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { NavValueType } from '.';
 import { createHashTag } from '@/util';
 
+type SetCurrentPageFn = (select: NavValueType) => void;
+
 interface LinkProps {
   page: NavValueType;
   currentSelected: NavValueType;
   activeHoverLink: NavValueType | null;
   disableActiveOnHover: boolean;
-  setCurrentSelect: (select: NavValueType) => void;
+  setCurrentSelect: SetCurrentPageFn;
   setLinkAsHover: (select: NavValueType | null) => void;
 }
 
@@ -41,4 +43,4 @@ const Link = ({
 };
 
 export { Link };
-export type { LinkProps };
+export type { LinkProps, SetCurrentPageFn };

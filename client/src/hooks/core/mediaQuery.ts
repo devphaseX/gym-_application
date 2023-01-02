@@ -32,10 +32,10 @@ function createQueryObserver(query: QueryRule, option: QueryOption) {
     );
   }
 
-  const parsedQuery = createParsedQueryCache(query);
-  if (parsedQuery) {
-    option.exposeParsedQuery?.(parsedQuery);
-  }
+  const parsedQuery = createParseQuery(query);
+
+  if (parsedQuery) option.exposeParsedQuery?.(parsedQuery);
+
   let matches = false;
   const abort = new AbortController();
   let unsubscribe = () => abort.abort();
@@ -46,7 +46,8 @@ function createQueryObserver(query: QueryRule, option: QueryOption) {
   if (!attachElementProvided && nativeMatchMediaExit) {
     const mediaQuery = window.matchMedia(resolvedQueryValue);
 
-    if (mediaQuery.matches !== matches) matches = mediaQuery.matches;
+    matches = mediaQuery.matches;
+    option.onChange(false, matches);
     const onQueryMatch = (event: MediaQueryListEvent) => {
       const currentMatch = event.matches;
       if (currentMatch === matches) return;
@@ -69,7 +70,7 @@ function createQueryObserver(query: QueryRule, option: QueryOption) {
       dimension: ScreenDimension,
       parsedQuery: QueryRuleWithObjectQuery
     ) {
-      if (matches) type SupportMediaKeys = Array<keyof SupportMediaQueryObject>;
+      type SupportMediaKeys = Array<keyof SupportMediaQueryObject>;
       const queryKeys = Object.keys(parsedQuery) as SupportMediaKeys;
 
       let newMatchDetected = queryKeys.length !== 0;
@@ -112,18 +113,23 @@ function createQueryObserver(query: QueryRule, option: QueryOption) {
         signal: abort.signal,
       });
     }
+
+    setQueryMatch(
+      document.documentElement.getBoundingClientRect(),
+      parsedQuery
+    );
   }
 
   return unsubscribe;
 }
 
-function createParsedQueryCache(query: QueryRule) {
+function createParseQuery(query: QueryRule) {
   const key = JSON.stringify(query, stringifiedObject);
-  if (parsedQueryCache.has(key)) return parsedQueryCache.get(key);
+  if (parsedQueryCache.has(key)) return parsedQueryCache.get(key)!;
   const parsedQuery = parseQueryObject(query);
   if (parsedQuery === null) return parsedQuery;
   parsedQueryCache.set(key, parsedQuery);
   return parsedQuery;
 }
 
-export { createQueryObserver, createParsedQueryCache };
+export { createQueryObserver, createParseQuery };
