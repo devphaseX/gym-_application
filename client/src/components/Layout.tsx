@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavBar, NavValueType, navType } from '@/components/navbar';
-import { useQueryMedia } from '../hooks/useMediaQuery';
-import { checkNativeMatchMedia } from '../hooks/core/util';
+import { useQueryMedia } from '../hooks/useMediaQuery/useMediaQuery';
+import { checkNativeMatchMedia } from '../hooks/useMediaQuery/core/util';
 import { useEffect } from 'react';
 
 interface UseMediaQueryMedium {
@@ -10,7 +10,7 @@ interface UseMediaQueryMedium {
 
 const useMediaQueryMedium = (option?: UseMediaQueryMedium) =>
   useQueryMedia(
-    checkNativeMatchMedia() ? '(min-width: 1060px)' : { 'min-width': '1060px' },
+    checkNativeMatchMedia() ? '(min-width: 1160px)' : { 'min-width': '1060px' },
     { onChange: option?.onChange }
   );
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { MediaQueryObject, QueryOption, QueryRule } from './core/types';
+import { QueryOption, QueryRule } from './core/types';
 import { createParseQuery, createQueryObserver } from './core/mediaQuery';
-import { stringifiedObject } from '../util';
+import { stringifiedObject } from '../../util';
 import { useEffect } from 'react';
 
 const useQueryMedia = (query: QueryRule, option: Partial<QueryOption>) => {

@@ -1,7 +1,158 @@
-.heroes {
-  padding: 40px;
+.hero {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--gray-20);
+  height: 100vh;
+}
+
+.hero-content {
+  width: 90vw;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  height: calc(5 / 6 * 100vh);
+  padding-bottom: 40px;
+  position: relative;
+  z-index: 10;
+}
+
+.sponsor {
+  background-color: var(--primary-100);
+  height: calc(100vh / 6);
+}
+
+.sponsor,
+.sponsor > div {
+  display: flex;
+  align-items: center;
+}
+
+.sponsor > div {
+  column-gap: 32em;
+}
+
+.sponsor > div {
+  display: flex;
+  width: 90vw;
+  margin-inline: auto;
+}
+
+.info-with-action {
+  font-size: 1.6rem;
+}
+
+.hero-image {
+  flex-basis: 50%;
+  flex-shrink: 0;
+  height: 100%;
+  display: inline-flex;
+}
+
+.hero-image img {
+  display: inline-flex;
+  margin-left: auto;
+}
+
+.hero-header {
+  position: relative;
+}
+
+.hero-page-text img {
+  display: inline-flex;
+  height: 90%;
+}
+
+.hero-header {
+  margin-bottom: 16px;
+}
+
+.hero-info {
+  margin-bottom: 16px;
+  width: 70%;
 }
 
 .brand-action {
-  font-size: 1.8rem;
+  display: inline-flex;
+  column-gap: 32px;
+}
+
+.hero-image {
+  margin-left: auto;
+}
+
+.hero-image img {
+  display: inline-block;
+  object-fit: contain;
+  height: 100%;
+}
+
+.span-image-width {
+  width: 100%;
+}
+
+@media (max-width: 66.2em) {
+  .hero {
+    height: fit-content;
+    display: block;
+  }
+
+  .hero-content {
+    width: 80vw;
+    flex-direction: column;
+    height: fit-content;
+    margin-top: 102px;
+  }
+
+  .hero-image {
+    width: 80%;
+    margin-inline: 0 auto;
+  }
+
+  .hero-image > img {
+    width: 100%;
+  }
+
+  .hero-page-text {
+    width: 65vw;
+    margin-right: auto;
+  }
+
+  .hero-page-text img {
+    height: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 44em) {
+  .hero-content {
+    width: 90vw;
+  }
+
+  .hero-info {
+    width: 100%;
+  }
+
+  .hero-image {
+    width: 90%;
+  }
+}
+
+@media (min-width: 66em) {
+  .hero-page-text::before {
+    position: absolute;
+    content: url('../assets/images/EvolveText.png');
+    top: -80px;
+    z-index: -1;
+    left: -80px;
+  }
+}
+
+.hidden {
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+.visible {
+  transform: translateX(0);
+  opacity: 1;
 }

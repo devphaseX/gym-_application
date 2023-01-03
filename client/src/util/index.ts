@@ -31,4 +31,13 @@ function createHashTag(value: string) {
     .replace(/\s/g, '')}`;
 }
 
-export { captureUpdateFunctionState, stringifiedObject, createHashTag };
+function getBoundClientRect(element: HTMLElement) {
+  return element.getBoundingClientRect();
+}
+
+export {
+  captureUpdateFunctionState,
+  stringifiedObject,
+  createHashTag,
+  getBoundClientRect,
+};

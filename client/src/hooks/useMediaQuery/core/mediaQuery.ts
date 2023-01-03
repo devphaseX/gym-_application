@@ -6,11 +6,10 @@ import {
   SupportMediaQueryObject,
 } from './types';
 import { checkNativeMatchMedia, resolveQueryObject } from './util';
-import { stringifiedObject } from '../../util';
+import { stringifiedObject } from '../../../util';
 import { parseQueryObject } from './parser';
 import { getSupportedMediaQueryObject } from './queryRules';
 
-const parsedQueryCache = new Map<string, QueryRuleWithObjectQuery>();
 function createQueryObserver(query: QueryRule, option: QueryOption) {
   let attachElementProvided = false;
   const nativeMatchMediaExit = checkNativeMatchMedia();
@@ -122,6 +121,8 @@ function createQueryObserver(query: QueryRule, option: QueryOption) {
 
   return unsubscribe;
 }
+
+const parsedQueryCache = new Map<string, QueryRuleWithObjectQuery>();
 
 function createParseQuery(query: QueryRule) {
   const key = JSON.stringify(query, stringifiedObject);

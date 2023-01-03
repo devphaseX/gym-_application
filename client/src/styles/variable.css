@@ -13,7 +13,8 @@
   --secondary-font: 'Monsterrrat';
 
   /* screen breakpoint */
-  --screen-small: 480px;
-  --screen-medium: 768px;
-  --screen-big: 1060px;
+  --screen-small: 30em;
+  --screen-medium: 48em;
+  --screen-tablet: 66.2em;
+  --screen-desktop: 75.125em;
 }

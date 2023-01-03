@@ -1,4 +1,5 @@
 import { useMemo, useRef, useEffect } from 'react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import '@/styles/navbar.css';
 import { imageAssest } from '@/assets';
 import { Link, LinkProps } from './Link';
@@ -43,7 +44,6 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
   const screenAboveMedium = useMediaQueryMedium({
     onChange: resetToggleOnDesktopTran,
   });
-
   //This function reset the menu sidebar for mobile screen on transition to Desktop mode
   async function resetToggleOnDesktopTran(
     prevMatch: boolean,
@@ -113,6 +113,7 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
       className={`flex-positioned navigation ${
         stickNav ? 'stickNav' : ''
       }`.trim()}
+      id="main-nav"
     >
       <div
         className="flex-positioned navContainer"
@@ -146,10 +147,9 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
           </div>
         ) : (
           <div className="btn-menu-box">
-            <button
-              className="btn-menu "
-              onClick={() => setMenuToggle(true)}
-            ></button>
+            <button className="btn-menu " onClick={() => setMenuToggle(true)}>
+              <Bars3Icon className="menu-bar"></Bars3Icon>
+            </button>
           </div>
         )}
       </div>
@@ -162,7 +162,7 @@ const NavBar = ({ currentSelected, setCurrentSelect }: NavBarProps) => {
                 style={{ fontSize: '32px' }}
                 onClick={() => setMenuToggle(false)}
               >
-                X
+                <XMarkIcon className="close-menu-icon" />
               </button>
             </div>
             <div className="mobile-nav-list-box">
