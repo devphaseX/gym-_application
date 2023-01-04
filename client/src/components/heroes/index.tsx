@@ -31,6 +31,7 @@ interface HeroProps {
 const Heroes = ({ setSelectPage }: HeroProps) => {
   const screenAboveMedium = useMediaQueryMedium();
   const heroRef = useRef<HTMLDivElement>(null);
+  const heroSectionRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement | null>(null);
   const { height } = useResizeObserver(navRef);
   const actionUpdate = useActionUpdate();
@@ -46,7 +47,11 @@ const Heroes = ({ setSelectPage }: HeroProps) => {
   }, [height]);
 
   return (
-    <section className="hero" id={createHashTag(navType.Home, true)}>
+    <section
+      className="hero"
+      id={createHashTag(navType.Home, true)}
+      ref={heroSectionRef}
+    >
       {/* Heroes */}
       <motion.div
         onViewportEnter={() => setSelectPage(navType.Home)}

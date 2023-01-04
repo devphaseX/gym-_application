@@ -1,5 +1,4 @@
 import React from 'react';
-import { type ImageAsset } from '../../assets';
 import {
   HomeModernIcon,
   UserGroupIcon,

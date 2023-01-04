@@ -9,8 +9,7 @@ const HText = ({ children }: HTextProps) => (
     style={{
       fontFamily: 'var( --primary-font)',
       fontWeight: 'bold',
-      fontSize: '3.2rem',
-      width: '60vw',
+      fontSize: '2.8rem',
       textTransform: 'uppercase',
     }}
   >
