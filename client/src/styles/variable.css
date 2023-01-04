@@ -10,7 +10,8 @@
   --secondary-400: #ffcd58;
   --secondary-500: #ffc132;
 
-  --secondary-font: 'Monsterrrat';
+  --primary-font: 'Monsterrrat';
+  --secondary-font: 'DM sans';
 
   /* screen breakpoint */
   --screen-small: 30em;

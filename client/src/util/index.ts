@@ -25,8 +25,8 @@ function stringifiedObject(_: string, value: any) {
   return value;
 }
 
-function createHashTag(value: string) {
-  return `${value.startsWith('#') ? '' : '#'}${value
+function createHashTag(value: string, omitHash?: boolean) {
+  return `${value.startsWith('#') || omitHash ? '' : '#'}${value
     .toString()
     .replace(/\s/g, '')}`;
 }

@@ -46,7 +46,7 @@ const Heroes = ({ setSelectPage }: HeroProps) => {
   }, [height]);
 
   return (
-    <section className="hero">
+    <section className="hero" id={createHashTag(navType.Home, true)}>
       {/* Heroes */}
       <motion.div
         onViewportEnter={() => setSelectPage(navType.Home)}

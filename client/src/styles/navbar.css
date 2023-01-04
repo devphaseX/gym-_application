@@ -76,11 +76,7 @@
   color: #a0a0a0;
 }
 .mobile-aside-position {
-  position: absolute;
-  top: 20px;
-  right: 40px;
-  width: calc(100% - 42px);
-  z-index: 20;
+  padding: 48px;
 }
 
 .mobile-aside-menu {
@@ -88,9 +84,10 @@
   top: 0;
   bottom: 0;
   right: 0;
-  width: min(65vw, 300px);
+  width: min(70vw, 400px);
   background-color: var(--primary-100);
   box-shadow: 5px 6px 20px 0px #575757;
+  z-index: 30;
 }
 
 @media screen and (min-width: 48em) {

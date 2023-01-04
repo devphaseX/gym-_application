@@ -79,3 +79,4 @@ const imageAssest = {
 };
 
 export { imageAssest };
+export type { ImageAsset };
